@@ -1,0 +1,32 @@
+## This is the document for private key creation for any linux user.
+
+Generate SSH Key Pair for the User
+Run the following on your Linux machine (where the user exists):
+
+sudo -u <username> ssh-keygen -t rsa -b 4096 -C "<username>@jenkins" -f /home/<username>/.ssh/id_rsa
+
+
+* Replace <username> with your actual Linux username. *
+
+When prompted for a passphrase, leave it empty (unless you want extra security).
+
+This will create:
+
+/home/<username>/.ssh/id_rsa (private key)
+
+/home/<username>/.ssh/id_rsa.pub (public key)
+
+ Add the Public Key to authorized_keys
+Ensure the public key is authorized for SSH login:
+
+sudo -u <username> bash -c 'cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
+
+
+Also make sure permissions are correct:
+
+sudo chown -R <username>:<username> /home/<username>/.ssh
+sudo chmod 700 /home/<username>/.ssh
+sudo chmod 600 /home/<username>/.ssh/id_rsa
+
+
+Now you can access the server using is.rsa private key
