@@ -26,6 +26,14 @@ data:
 
   policy.default: role:readonly
 ```
+> [!NOTE]
+> Due to **policy.default: role:readonly** line in above yaml.
+> Any user without an explicit deny automatically gets ArgoCD’s built-in readonly role, which has global read access to everything (all apps/projects/repos). 
+>
+>  So even though you wrote p, role:project-readonly, ..., your readuser is still inheriting the global role:readonly.
+>
+> Setting policy.default: "" → denies access by default unless explicitly granted.
+
 
 🔎 Explanation of Each Section:
 
