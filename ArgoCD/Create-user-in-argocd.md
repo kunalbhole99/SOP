@@ -1,5 +1,6 @@
+# ArgoCD User with RBAC Access
 ---
-✅ Step 1: Edit ArgoCD RBAC Config
+## ✅ Step 1: Edit ArgoCD RBAC Config
 
 Open RBAC config in your namespace (argocd):
 
@@ -46,7 +47,7 @@ p, <subject>, <resource>, <action>, <object>, <effect>
 
 * effect → allow or deny
 
-✅ Step 2: Restart ArgoCD API Server
+## ✅ Step 2: Restart ArgoCD API Server
 
 Changes take effect after restart:
 
@@ -54,7 +55,7 @@ Changes take effect after restart:
 kubectl rollout restart deployment argocd-server -n cd
 ```
 
-✅ Step 3: Login as Different Users
+## ✅ Step 3: Login as Different Users
 
 If you’re using ArgoCD’s local accounts (not Keycloak yet):
 
