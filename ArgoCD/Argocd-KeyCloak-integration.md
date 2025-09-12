@@ -189,6 +189,6 @@ accounts.admin: apiKey,login
       LhRB3XE55NdZA5WfqQ7HzmdaIl20vMT5W8EzRvbTmyRkt/4HAJHWf4zioHbiYheM
       ZBtrSHb03RWl3WHkmOK/
       -----END CERTIFICATE-----
-    logoutURL: https://keycloak.example.com/realms/your-realm-name/protocol/openid-connect/logout
+    logoutURL: https://172.31.52.46/realms/argocd/protocol/openid-connect/logout
 
 ```
