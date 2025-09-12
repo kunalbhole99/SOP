@@ -103,7 +103,7 @@ p, <subject>, <resource>, <action>, <object>, <effect>
 
 * effect → allow or deny
 
-## ✅ Step 2: Restart ArgoCD API Server
+## Restart ArgoCD API Server
 
 Changes take effect after restart:
 
@@ -111,11 +111,8 @@ Changes take effect after restart:
 kubectl rollout restart deployment argocd-server -n cd
 ```
 
-## ✅ Step 3: Login as Different Users
+## ✅ Step 2: add keycloak OIDC config data in argocd-cm configmap
 
-If you’re using ArgoCD’s local accounts (not Keycloak yet):
-
-1. Create users in argocd-cm:
 
 ```bash
 kubectl edit configmap argocd-cm -n cd
@@ -155,6 +152,31 @@ kubectl rollout restart deployment argocd-server -n cd
 ```
 
 
+## ✅ Step 2: Create secret for keycloak.crt
+
+1. Go to the secret path and run command.
+
+```bash
+kubectl -n argocd create secret generic keycloak-ca-secret-for-argocd --from-file=keycloak.crt
+```
+
+2. Mount secret in argocd-server deployment.
+
+under volumes:
+```bash
+- name: keycloak-ca
+        secret:
+          defaultMode: 420
+          secretName: keycloak-ca-secret-for-argocd
+```
+
+under volumeMounts:
+```bash
+- mountPath: /app/config/tls/172.31.52.46.crt
+          name: keycloak-ca
+          subPath: 172.31.52.46.crt
+```
+
 test Data:
 
 ```bash
@@ -192,3 +214,4 @@ test Data:
     logoutURL: https://172.31.52.46/realms/argocd/protocol/openid-connect/logout
 
 ```
+
