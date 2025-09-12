@@ -158,7 +158,7 @@ kubectl rollout restart deployment argocd-server -n cd
 test Data:
 
 ```bash
-accounts.admin: apiKey,login
+  accounts.admin: apiKey,login
   accounts.readonly: apiKey,login
   oidc.config: |
     name: Keycloak
