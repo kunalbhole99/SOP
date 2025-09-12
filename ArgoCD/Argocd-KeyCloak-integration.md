@@ -1,13 +1,59 @@
 # ArgoCD & KeyCloak Integration
 
 ---
+# Keycloak Configuration for ArgoCD
+
+## ✅ Step 1: Create a Client in Realm
+1. Select **Client Type** as **OpenID Connect**  
+2. Provide **Client ID** (example: `argocd`)  
+3. Provide **Name** and **Description**  
+4. Set **Always Display in UI** → **ON**  
+5. Enable **Client Authentication**  
+6. In **Authentication Flow**, choose:  
+   - Standard Flow  
+   - Direct Access Grants  
+7. Configure Redirects:  
+   - **Valid Redirect URIs** → `https://172.31.7.140:30015/auth/callback`  
+   - **Valid Post Logout Redirect URIs** → `https://172.31.7.140:30015`  
+   - **Web Origins** → `*`  
+
+---
+
+## ✅ Step 2: Create a Client Scope
+- **Name** → `groups`  
+- **Description** → `groups`  
+- **Select Type** → `Default`  
+
+---
+
+## ✅ Step 3: Create a Mapper in that Client Scope
+1. Add a new **Mapper** by configuration  
+2. Choose **Group Membership**  
+3. Provide:  
+   - **Name** → `groups`  
+   - **Token Claim Name** → `groups`  
+4. Deselect **Full Group Path**  
+
+---
+
+## ✅ Step 4: Create Groups
+- Create groups as per your requirements.  
+
+---
+
+## ✅ Step 5: Create Users and Assign to Groups
+- Create users and assign them to the created groups.  
+
+
+
+# ArgoCD Configuration for keycloak
 
 ## ✅ Step 1: Edit ArgoCD RBAC Config
 
 Open RBAC config in your namespace (argocd):
 
 ```bash 
-kubectl edit configmap argocd-rbac-cm -n cd
+kubectl edit configmap argocd-rbac-cm -n argocd
 ```
 If it’s empty, add something like this:
 
@@ -22,11 +68,7 @@ data:
     p, role:project-readonly, applications, get, cloudprotect/*, allow
     p, role:project-readonly, projects, get, cloudprotect, allow
 
-    # Map users to roles
-    #g, adminuser, role:project-admin
-    #g, readuser, role:project-readonly
-
-    # ArgoCD admins (Keycloak group → role:admin)
+    # ArgoCD RBAC Users (Keycloak group → role:admin)
     g, admin, role:project-admin
     g, readonly, role:project-readonly
 
@@ -82,42 +124,34 @@ kubectl edit configmap argocd-cm -n cd
 * Add under data::
 
 ```Yaml:
-data:
-  accounts.adminuser: apiKey, login
-  accounts.readonlyuser: apiKey, login
+  accounts.your-group-name: apiKey,login
+  accounts.your-group-name: apiKey,login
+  oidc.config: |
+    name: Keycloak
+    issuer: https://keycloak.example.com/realms/your-realm-name
+    clientID: argocd
+    clientSecret: your-client-secret-value
+    requestedScopes: ["openid", "profile", "email", "groups"]
+    rootCA: |
+      -----BEGIN CERTIFICATE-----
+      ---Your CA certificate---
+      -----END CERTIFICATE-----
+    logoutURL: https://keycloak.example.com/realms/your-realm-name/protocol/openid-connect/logout
 ```
+
+> [!NOTE]
+> your-group-name - Group created in keycloak.
+> 
+> keycloak.example.com - Your keyCloak ip or Domain name with port
+> 
+> your-realm-name - realm name which you used to create client in your keycloak.
+> 
+> your-client-secret-value - your client secret value
 
 2. Restart API server again:
 
 ```bash
 kubectl rollout restart deployment argocd-server -n cd
 ```
-3. To set password of newly created users:
-* Login to ArgoCD:
-  
-```bash
-argocd login <ARGOCD_SERVER> --username admin --password <INITIAL_ADMIN_PASSWORD> --insecure
-```
 
-* Replace <ARGOCD_SERVER> with the URL from step 1 (example: localhost:8080 or argocd.mycompany.com).
 
-* --insecure is needed if you haven’t set up TLS properly yet.
-
-👉 The initial admin password is stored in Kubernetes secret:
-
-```
-kubectl -n cd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-```
-
-3. Now Set Password for Your User:
-```bash:
-argocd account update-password --account adminuser
-```
-
-```bash:
-argocd account update-password --account readonlyuser
-```
-
-* You will prompt to set new password to given user.
-
-  
