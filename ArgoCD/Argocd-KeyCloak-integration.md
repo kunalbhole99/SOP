@@ -155,3 +155,40 @@ kubectl rollout restart deployment argocd-server -n cd
 ```
 
 
+test Data:
+
+```bash
+accounts.admin: apiKey,login
+  accounts.readonly: apiKey,login
+  oidc.config: |
+    name: Keycloak
+    issuer: https://172.31.52.46/realms/argocd
+    clientID: argocd
+    clientSecret: lTPnIdrFC9Zw0VZQ29qB8gbIY7BTWHxg
+    requestedScopes: ["openid", "profile", "email", "groups"]
+    rootCA: |
+      -----BEGIN CERTIFICATE-----
+      MIIDmzCCAoOgAwIBAgIUL8UjfO71mew4sf9mY2jj06bpx7UwDQYJKoZIhvcNAQEL
+      BQAwWzELMAkGA1UEBhMCVVMxDjAMBgNVBAgMBVN0YXRlMQ0wCwYDVQQHDARDaXR5
+      MRUwEwYDVQQKDAxPcmdhbml6YXRpb24xFjAUBgNVBAMMDTE3Mi4zMS41Mi4xNDYw
+      HhcNMjUwOTA4MDk1NjEyWhcNMjYwOTA4MDk1NjEyWjBbMQswCQYDVQQGEwJVUzEO
+      MAwGA1UECAwFU3RhdGUxDTALBgNVBAcMBENpdHkxFTATBgNVBAoMDE9yZ2FuaXph
+      dGlvbjEWMBQGA1UEAwwNMTcyLjMxLjUyLjE0NjCCASIwDQYJKoZIhvcNAQEBBQAD
+      ggEPADCCAQoCggEBALp+pJv92h2up2cGKiPRx0KxpZ/Uo+2VHJyShzqOHV1i9Zb0
+      2HDqKkkNVC8v4F2/pXfaqSTlST4ThB4LOD3LO/Z/vMzrOuNSu+1c6BGwEosoVyeQ
+      he1IV86mv+37oe4O2iwZ98EmNaHrBxw5eXm1YIAcLLtD+mKibnp5bL078q0DPHe+
+      JXFNjR5i2HO/1dpICSstFIsdEoaCYYodsfOeNp5TBdMJRy8L4uZaXjRjtehmT3VQ
+      k3sat1LG+9vnaCW00FqyXUVYqaXKsMHMdYbQKYQKBZelwiODStZldvc4P3BO5VRp
+      DRlgb+w3rPzXT4/H2ESTUEzSVO+UaJ+SwWYqtU0CAwEAAaNXMFUwDgYDVR0PAQH/
+      BAQDAgSwMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA8GA1UdEQQIMAaHBKwfNC4wHQYD
+      VR0OBBYEFNQ7zRFsYrk/wZoh/U7LmQ00vB0pMA0GCSqGSIb3DQEBCwUAA4IBAQA6
+      kG+Dg0uphpOInebGY7zHrcDqvh5g4twln9KHSJciOJQNa0HtDjcJbM3ra9TmvmUh
+      PJKKMV07QuipPtBp5X+NCqgUsY72XgZvc0QiMUkNvDBaNJEgC0Qo43+EKIh9DUzx
+      X//vjTRh2pjVQokpsMKexby+h9O8tf4iLEExcxXqpPGSmQEYj0lLbSA+esp9Kx8P
+      x2lMYLEDJhCNADJMOC7NonIYUMzZ1izlF3wus994S569SDXjk2+pJGkg7hQVP7If
+      LhRB3XE55NdZA5WfqQ7HzmdaIl20vMT5W8EzRvbTmyRkt/4HAJHWf4zioHbiYheM
+      ZBtrSHb03RWl3WHkmOK/
+      -----END CERTIFICATE-----
+    logoutURL: https://keycloak.example.com/realms/your-realm-name/protocol/openid-connect/logout
+
+```
