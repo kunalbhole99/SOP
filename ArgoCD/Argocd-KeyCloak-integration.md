@@ -99,7 +99,7 @@ p, <subject>, <resource>, <action>, <object>, <effect>
 
 * action → What operation is allowed (get, create, update, delete, sync, override, action/*, *)
 
-* object → Which resource instance(s) (cd/* → all in namespace cd)
+* object → Which resource instance(s) (example: project_name/application_name , if want to allow all then */*)
 
 * effect → allow or deny
 
